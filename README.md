@@ -12,3 +12,4 @@ Easily do calculations on hours and minutes using the command line
  - `@cached_classmethod_property`
 4. Add CI
 5. Add CD and PyPI
+6. Add Python 3.9 support
