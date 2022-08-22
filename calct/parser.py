@@ -22,7 +22,7 @@ from enum import Enum
 from operator import add, sub, mul, truediv
 from collections import deque
 
-from typing import Any
+from typing import Any, cast
 
 from calct.duration import Duration
 from calct.common import (
@@ -181,7 +181,7 @@ def parse(tokens: list[str]) -> deque[str]:
 
 
 def evaluate_rpn(rpn: deque[str]) -> Number | Duration:
-    eval_stack: deque[str | float | Duration] = deque()
+    eval_stack: deque[str | Number | Duration] = deque()
 
     for t in rpn:
         logging.debug(f"{t=}")
@@ -209,4 +209,4 @@ def evaluate_rpn(rpn: deque[str]) -> Number | Duration:
 
     if not isinstance(eval_stack[-1], Duration | Number):
         raise ValueError("Invalid expression: the result is not a duration or a number")
-    return eval_stack[-1]
+    return cast(Number | Duration, eval_stack[-1])
