@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  linting_calct:
+  linting:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,13 +29,13 @@ jobs:
           python -m black --check calct tests
           python -m mypy -p calct -p tests
 
-  test_calct:
-    needs: linting_calct
+  test:
+    needs: linting
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-20.04, windows-latest]
         python-version: ["3.9", "3.10"]
-    runs-on: $ {{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
