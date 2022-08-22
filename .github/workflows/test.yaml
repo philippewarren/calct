@@ -51,4 +51,10 @@ jobs:
           python -m pip install .[dev,test]
 
       - name: Executing tests
-        run: pytest -v
+        run: python -m pytest -v --cov-report=html:./coverage_html"
+
+      - name: Uploading coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage_${{ matrix.python-version }}_${{ matrix.os }}
+          path: ./coverage_html
