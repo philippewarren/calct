@@ -32,19 +32,18 @@ from calct.duration import Duration
 
 
 def log_level_from_name(name: str) -> int:
-    match name:
-        case "DEBUG":
-            return logging.DEBUG
-        case "INFO":
-            return logging.INFO
-        case "WARNING":
-            return logging.WARNING
-        case "ERROR":
-            return logging.ERROR
-        case "CRITICAL":
-            return logging.CRITICAL
-        case _:
-            raise ValueError(f"Invalid log level: {name}")
+    if name == "DEBUG":
+        return logging.DEBUG
+    elif name == "INFO":
+        return logging.INFO
+    elif name == "WARNING":
+        return logging.WARNING
+    elif name == "ERROR":
+        return logging.ERROR
+    elif name == "CRITICAL":
+        return logging.CRITICAL
+    else:
+        raise ValueError(f"Invalid log level: {name}")
 
 
 def get_help_str() -> str:

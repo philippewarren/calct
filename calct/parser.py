@@ -22,7 +22,7 @@ from enum import Enum
 from operator import add, sub, mul, truediv
 from collections import deque
 
-from typing import Any, cast
+from typing import Any, cast, Callable
 
 from calct.duration import Duration
 from calct.common import (
@@ -100,46 +100,49 @@ class Operation(Enum):
     TO = "@"
 
     @property
-    def op(self):
-        match self:
-            case Operation.ADD:
-                return add
-            case Operation.SUB:
-                return sub
-            case Operation.MUL:
-                return mul
-            case Operation.DIV:
-                return truediv
-            case Operation.TO:
-                return op_to
+    def op(self) -> Callable[[Any, Any], Any]:
+        if self is Operation.ADD:
+            return add
+        elif self is Operation.SUB:
+            return sub
+        elif self is Operation.MUL:
+            return mul
+        elif self is Operation.DIV:
+            return truediv
+        elif self is Operation.TO:
+            return op_to
+        else:
+            return NotImplemented
 
     @property
-    def precedence(self):
-        match self:
-            case Operation.ADD:
-                return 2
-            case Operation.SUB:
-                return 2
-            case Operation.MUL:
-                return 3
-            case Operation.DIV:
-                return 3
-            case Operation.TO:
-                return 4
+    def precedence(self) -> int:
+        if self is Operation.ADD:
+            return 2
+        elif self is Operation.SUB:
+            return 2
+        elif self is Operation.MUL:
+            return 3
+        elif self is Operation.DIV:
+            return 3
+        elif self is Operation.TO:
+            return 4
+        else:
+            return NotImplemented
 
     @property
-    def associativity(self):
-        match self:
-            case Operation.ADD:
-                return Associativity.LEFT
-            case Operation.SUB:
-                return Associativity.LEFT
-            case Operation.MUL:
-                return Associativity.LEFT
-            case Operation.DIV:
-                return Associativity.LEFT
-            case Operation.TO:
-                return Associativity.RIGHT
+    def associativity(self) -> Associativity:
+        if self is Operation.ADD:
+            return Associativity.LEFT
+        elif self is Operation.SUB:
+            return Associativity.LEFT
+        elif self is Operation.MUL:
+            return Associativity.LEFT
+        elif self is Operation.DIV:
+            return Associativity.LEFT
+        elif self is Operation.TO:
+            return Associativity.RIGHT
+        else:
+            return NotImplemented
 
 
 def parse(tokens: list[str]) -> deque[str]:

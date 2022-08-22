@@ -19,9 +19,7 @@ from __future__ import annotations
 
 import string
 
-from typing import TypeAlias
-
-Number: TypeAlias = int | float
+Number = int | float
 
 
 SIGN_STR = "+-"
