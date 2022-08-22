@@ -40,10 +40,11 @@ jobs:
 
   test_calct:
     needs: linting_calct
-    runs-on: ubuntu-latest
     strategy:
       matrix:
+        os: [ubuntu-latest, ubuntu-20.04, windows-latest]
         python-version: ["3.9", "3.10"]
+    runs-on: $ {{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
