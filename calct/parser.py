@@ -210,12 +210,6 @@ def evaluate_rpn(rpn: deque[str]) -> Union[Number, Duration]:
                         raise ValueError(f"`{t}` is not a valid number")
                 logging.debug(f"t is a number, {eval_stack=}")
 
-    if not isinstance(
-        eval_stack[-1],
-        cast(
-            type,
-            Union[Duration, Number],
-        ),  # Bug in MyPy, cast required to pass check. Works at runtime.
-    ):
+    if not isinstance(eval_stack[-1], (Duration, int, float)):
         raise ValueError("Invalid expression: the result is not a duration or a number")
     return cast(Union[Number, Duration], eval_stack[-1])
