@@ -151,7 +151,7 @@ class Duration:
         return self.__mul__(other)
 
     def __truediv__(self, other: Number) -> Duration:
-        if not isinstance(other, (int, float))):  # type: ignore
+        if not isinstance(other, (int, float)):  # type: ignore
             raise TypeError(
                 f"unsupported operand type(s) for /: '{type(self)}' and '{type(other)}'"
             )
