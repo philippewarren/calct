@@ -22,7 +22,7 @@ from enum import Enum
 from operator import add, sub, mul, truediv
 from collections import deque
 
-from typing import Any, cast, Callable
+from typing import Any, cast, Callable, Union
 
 from calct.duration import Duration
 from calct.common import (
@@ -183,8 +183,8 @@ def parse(tokens: list[str]) -> deque[str]:
     return out_queue
 
 
-def evaluate_rpn(rpn: deque[str]) -> Number | Duration:
-    eval_stack: deque[str | Number | Duration] = deque()
+def evaluate_rpn(rpn: deque[str]) -> Union[Number, Duration]:
+    eval_stack: deque[Union[str, Number, Duration]] = deque()
 
     for t in rpn:
         logging.debug(f"{t=}")
@@ -210,6 +210,6 @@ def evaluate_rpn(rpn: deque[str]) -> Number | Duration:
                         raise ValueError(f"`{t}` is not a valid number")
                 logging.debug(f"t is a number, {eval_stack=}")
 
-    if not isinstance(eval_stack[-1], Duration | Number):
+    if not isinstance(eval_stack[-1], Union[Duration, Number]):
         raise ValueError("Invalid expression: the result is not a duration or a number")
-    return cast(Number | Duration, eval_stack[-1])
+    return cast(Union[Number, Duration], eval_stack[-1])

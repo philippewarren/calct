@@ -17,9 +17,11 @@
 
 from __future__ import annotations
 
+from typing import Union
+
 import string
 
-Number = int | float
+Number = Union[int, float]
 
 
 SIGN_STR = "+-"
