@@ -1,7 +1,10 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"]
+requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=7.0.5"]
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
 required_plugins = "pytest-cov>=3.0.0"
 addopts = "--cov=calct --cov-branch --cov-report=html:htmlcov_calct"
+
+[tool.setuptools_scm]
+write_to = "calct/__version__.py"
