@@ -91,7 +91,7 @@ jobs:
 
       - name: Install wheel
         run: |
-          python -m pip install ./dist/*.whl[test]
+          python -m pip install $(find -wholename ./dist/*.whl)[test]
 
       - name: Executing tests on build
         run: |
