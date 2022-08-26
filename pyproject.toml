@@ -4,4 +4,4 @@ build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
 required_plugins = "pytest-cov>=3.0.0"
-addopts = "--cov=calct --cov-report=html:htmlcov_calct"
+addopts = "--cov=calct --cov-branch --cov-report=html:htmlcov_calct"
