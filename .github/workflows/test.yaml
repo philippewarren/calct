@@ -86,7 +86,7 @@ jobs:
 
       - name: Installing tools and dependencies
         run: |
-          python -m pip install --upgrade pip setuptools wheel twnine build
+          python -m pip install --upgrade pip setuptools wheel twine build
 
       - name: Build
         run: |
