@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import pytest
 
-from calct.parser import evaluate_rpn, deque, Duration
+from calct.parser import Duration, deque, evaluate_rpn
 
 
 def test_triple_sum():

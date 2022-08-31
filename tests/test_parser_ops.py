@@ -16,7 +16,7 @@
 
 from __future__ import annotations
 
-from calct.parser import Operation, Associativity, add, sub, mul, truediv, op_to
+from calct.parser import Associativity, Operation, add, mul, op_to, sub, truediv
 
 
 def test_add():

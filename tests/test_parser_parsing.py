@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import pytest
 
-from calct.parser import parse, deque
+from calct.parser import deque, parse
 
 
 def test_triple_sum():

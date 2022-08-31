@@ -17,25 +17,23 @@
 from __future__ import annotations
 
 import logging
-
-from enum import Enum
-from operator import add, sub, mul, truediv
 from collections import deque
+from enum import Enum
+from operator import add, mul, sub, truediv
+from typing import Any, Callable, Union, cast
 
-from typing import Any, cast, Callable, Union
-
-from calct.duration import Duration
 from calct.common import (
-    Number,
-    OPS_STR,
-    OPS_PAREN_STR,
     DIGITS_STR,
-    SIGN_STR,
-    FLOAT_EXPONENT_STR,
     FLOAT_CHARS_STR,
-    WHITESPACE_STR,
+    FLOAT_EXPONENT_STR,
     FLOAT_SEPARATOR_EXPONENT_STR,
+    OPS_PAREN_STR,
+    OPS_STR,
+    SIGN_STR,
+    WHITESPACE_STR,
+    Number,
 )
+from calct.duration import Duration
 
 
 def lex(input_str: str) -> list[str]:

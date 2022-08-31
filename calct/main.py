@@ -16,19 +16,17 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import argparse
+import cmd
 import logging
 import os
 import sys
-
-import cmd
-
+from dataclasses import dataclass
 from typing import cast
 
 import calct
-from calct.parser import lex, parse, evaluate_rpn
 from calct.duration import Duration
+from calct.parser import evaluate_rpn, lex, parse
 
 
 def log_level_from_name(name: str) -> int:

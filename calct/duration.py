@@ -17,15 +17,15 @@
 from __future__ import annotations
 
 from datetime import timedelta
-from time import strptime
 from functools import total_ordering
 from itertools import chain
+from time import strptime
 
 from calct.common import (
-    Number,
     CANT_BE_CUSTOM_SEPARATOR,
     DEFAULT_HOUR_SEPARATOR,
     DEFAULT_MINUTE_SEPARATOR,
+    Number,
 )
 
 
