@@ -21,36 +21,36 @@ from calct.parser import Associativity, Operation, add, mul, op_to, sub, truediv
 
 def test_add():
     assert Operation.ADD == Operation("+")
-    assert Operation.ADD.op == add
-    assert Operation.ADD.op(1, 2) == 3
+    assert Operation.ADD.operation is add
+    assert Operation.ADD.operation(1, 2) == 3
     assert Operation.ADD.associativity == Associativity.LEFT
 
 
 def test_sub():
     assert Operation.SUB == Operation("-")
-    assert Operation.SUB.op == sub
-    assert Operation.SUB.op(1, 2) == -1
+    assert Operation.SUB.operation is sub
+    assert Operation.SUB.operation(1, 2) == -1
     assert Operation.SUB.associativity == Associativity.LEFT
 
 
 def test_mul():
     assert Operation.MUL == Operation("*")
-    assert Operation.MUL.op == mul
-    assert Operation.MUL.op(3, 2) == 6
+    assert Operation.MUL.operation is mul
+    assert Operation.MUL.operation(3, 2) == 6
     assert Operation.MUL.associativity == Associativity.LEFT
 
 
 def test_div():
     assert Operation.DIV == Operation("/")
-    assert Operation.DIV.op == truediv
-    assert Operation.DIV.op(1, 2) == 0.5
+    assert Operation.DIV.operation is truediv
+    assert Operation.DIV.operation(1, 2) == 0.5
     assert Operation.DIV.associativity == Associativity.LEFT
 
 
 def test_to():
     assert Operation.TO == Operation("@")
-    assert Operation.TO.op == op_to
-    assert Operation.TO.op(2, 5) == 3
+    assert Operation.TO.operation is op_to
+    assert Operation.TO.operation(2, 5) == 3
     assert Operation.TO.associativity == Associativity.RIGHT
 
 

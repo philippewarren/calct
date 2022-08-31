@@ -37,6 +37,7 @@ from calct.duration import Duration
 
 
 def lex(input_str: str) -> list[str]:
+    """Lexes the input string into a list of tokens"""
     tokens: list[str] = []
     buffer: list[str] = []
 
@@ -58,7 +59,8 @@ def lex(input_str: str) -> list[str]:
                     buffer.append(char)
                 else:
                     raise ValueError(
-                        f"`{char}` is following `{FLOAT_EXPONENT_STR}` and is not a digit `{DIGITS_STR}` or a sign `{SIGN_STR}`"
+                        f"`{char}` is following `{FLOAT_EXPONENT_STR}` "
+                        f"and is not a digit `{DIGITS_STR}` or a sign `{SIGN_STR}`"
                     )
 
             else:
@@ -72,7 +74,10 @@ def lex(input_str: str) -> list[str]:
             buffer.append(char)
         else:
             raise ValueError(
-                f"`{char}` is not a digit `{DIGITS_STR}`, an operator or parenthesis `{OPS_PAREN_STR}`, a whitespace, a digit separator or exponent `{FLOAT_SEPARATOR_EXPONENT_STR}`, or a time unit or separator `{''.join(Duration.get_hour_and_minute_seps())}`"
+                f"`{char}` is not a digit `{DIGITS_STR}`, "
+                f"an operator or parenthesis `{OPS_PAREN_STR}`, "
+                f"a whitespace, a digit separator or exponent `{FLOAT_SEPARATOR_EXPONENT_STR}`, "
+                f"or a time unit or separator `{''.join(Duration.get_hour_and_minute_seps())}`"
             )
         last_char = char
 
@@ -82,15 +87,20 @@ def lex(input_str: str) -> list[str]:
 
 
 class Associativity(Enum):
+    """Enum for associativity"""
+
     LEFT = 1
     RIGHT = 2
 
 
 def op_to(val1: Any, val2: Any) -> Any:
+    """Implements the `to` operator"""
     return val2 - val1
 
 
 class Operation(Enum):
+    """Enum for operations"""
+
     ADD = "+"
     SUB = "-"
     MUL = "*"
@@ -98,73 +108,89 @@ class Operation(Enum):
     TO = "@"
 
     @property
-    def op(self) -> Callable[[Any, Any], Any]:
+    def operation(self) -> Callable[[Any, Any], Any]:
+        """Dispatches the operation to the correct function"""
         if self is Operation.ADD:
             return add
-        elif self is Operation.SUB:
+
+        if self is Operation.SUB:
             return sub
-        elif self is Operation.MUL:
+
+        if self is Operation.MUL:
             return mul
-        elif self is Operation.DIV:
+
+        if self is Operation.DIV:
             return truediv
-        elif self is Operation.TO:
+
+        if self is Operation.TO:
             return op_to
-        else:
-            return NotImplemented
+
+        return NotImplemented
 
     @property
     def precedence(self) -> int:
+        """Returns the precedence of the operation"""
         if self is Operation.ADD:
             return 2
-        elif self is Operation.SUB:
+
+        if self is Operation.SUB:
             return 2
-        elif self is Operation.MUL:
+
+        if self is Operation.MUL:
             return 3
-        elif self is Operation.DIV:
+
+        if self is Operation.DIV:
             return 3
-        elif self is Operation.TO:
+
+        if self is Operation.TO:
             return 4
-        else:
-            return NotImplemented
+
+        return NotImplemented
 
     @property
     def associativity(self) -> Associativity:
+        """Returns the associativity of the operation"""
         if self is Operation.ADD:
             return Associativity.LEFT
-        elif self is Operation.SUB:
+
+        if self is Operation.SUB:
             return Associativity.LEFT
-        elif self is Operation.MUL:
+
+        if self is Operation.MUL:
             return Associativity.LEFT
-        elif self is Operation.DIV:
+
+        if self is Operation.DIV:
             return Associativity.LEFT
-        elif self is Operation.TO:
+
+        if self is Operation.TO:
             return Associativity.RIGHT
-        else:
-            return NotImplemented
+
+        return NotImplemented
 
 
 def parse(tokens: list[str]) -> deque[str]:
+    """Parses the tokens into a Reverse Polish Notation (RPN) stack"""
     logging.debug(tokens)
 
     out_queue: deque[str] = deque()
     op_stack: deque[str] = deque()
 
-    for t in tokens:
-        if t not in OPS_PAREN_STR:
-            out_queue.append(t)
-        elif t in OPS_STR:
+    for token in tokens:
+        if token not in OPS_PAREN_STR:
+            out_queue.append(token)
+        elif token in OPS_STR:
             while (len(op_stack) > 0 and op_stack[-1] in OPS_STR) and (
-                (Operation(op_stack[-1]).precedence > Operation(t).precedence)
+                (Operation(op_stack[-1]).precedence > Operation(token).precedence)
                 or (
-                    (Operation(op_stack[-1]).precedence == Operation(t).precedence)
-                    and Operation(t).associativity == Associativity.LEFT
+                    (Operation(op_stack[-1]).precedence == Operation(token).precedence)
+                    and Operation(token).associativity == Associativity.LEFT
                 )
             ):
                 out_queue.append(op_stack.pop())
-            op_stack.append(t)
-        elif t == "(":
-            op_stack.append(t)
-        elif t == ")":
+            op_stack.append(token)
+        elif token == "(":
+            op_stack.append(token)
+        elif token == ")":
             if len(op_stack) == 0:
                 raise ValueError("Unmatched closing parenthesis")
             while op_stack[-1] != "(":
@@ -182,32 +208,60 @@ def parse(tokens: list[str]) -> deque[str]:
 
 
 def evaluate_rpn(rpn: deque[str]) -> Union[Number, Duration]:
+    """Evaluates the Reverse Polish Notation (RPN) stack"""
     eval_stack: deque[Union[str, Number, Duration]] = deque()
 
-    for t in rpn:
-        logging.debug(f"{t=}")
-        if t in OPS_STR:
+    for element in rpn:
+        logging.debug(f"{element=}")
+        if element in OPS_STR:
             logging.debug(f"op1={eval_stack[-1]!r}, op2={eval_stack[-2]!r}")
             op2 = eval_stack.pop()
             op1 = eval_stack.pop()
-            eval_stack.append(Operation(t).op(op1, op2))
-            logging.debug(f"t is {t}, {eval_stack=}")
+            eval_stack.append(Operation(element).operation(op1, op2))
+            logging.debug(f"t is {element}, {eval_stack=}")
         else:
-            if (common := (set(t) & Duration.get_hour_and_minute_seps())) != set():
-                eval_stack.append(Duration.parse(t))
-                logging.debug(
-                    f"t is a time because it contains {common}, {eval_stack=}"
-                )
+            if (common := (set(element) & Duration.get_hour_and_minute_seps())) != set():
+                eval_stack.append(Duration.parse(element))
+                logging.debug(f"t is a time because it contains {common}, {eval_stack=}")
             else:
                 try:
-                    eval_stack.append(int(t))
+                    eval_stack.append(int(element))
                 except ValueError:
                     try:
-                        eval_stack.append(float(t))
-                    except ValueError:
-                        raise ValueError(f"`{t}` is not a valid number")
+                        eval_stack.append(float(element))
+                    except ValueError as ex:
+                        raise ValueError(f"`{element}` is not a valid number") from ex
                 logging.debug(f"t is a number, {eval_stack=}")
 
     if not isinstance(eval_stack[-1], (Duration, int, float)):
         raise ValueError("Invalid expression: the result is not a duration or a number")
     return cast(Union[Number, Duration], eval_stack[-1])
+
+
+def compute(expr: str) -> Union[Number, Duration]:
+    """Computes the value of the expression"""
+
+    # TODO: add error messages to raised exception for each case and remove all try-except blocks here
+    try:
+        tokens = lex(expr)
+    except ValueError as ex:
+        raise ex
+
+    try:
+        rpn = parse(tokens)
+    except ValueError as ex:
+        raise ex
+    except TypeError as ex:
+        print("TypeError IN PARSING")
+        raise ex
+
+    try:
+        val = evaluate_rpn(rpn)
+    except ValueError as ex:
+        print("ValueError IN RPN EVALUATION")
+        raise ex
+    except TypeError as ex:
+        print("TypeError IN RPN EVALUATION")
+        raise ex
+
+    return val

@@ -33,7 +33,7 @@ def test_duration_mul_float():
 
 def test_duration_mul_duration():
     with pytest.raises(TypeError):
-        Duration(hours=1) * Duration(hours=2)  # type: ignore
+        _ = Duration(hours=1) * Duration(hours=2)  # type: ignore
 
 
 def test_duration_add_duration():
@@ -42,7 +42,7 @@ def test_duration_add_duration():
 
 def test_duration_add_number():
     with pytest.raises(TypeError):
-        Duration(hours=1) + 2  # type: ignore
+        _ = Duration(hours=1) + 2  # type: ignore
 
 
 def test_duration_sub_duration():
@@ -59,7 +59,7 @@ def test_duration_sub_negative_duration():
 
 def test_duration_sub_number():
     with pytest.raises(TypeError):
-        Duration(hours=2) - 2  # type: ignore
+        _ = Duration(hours=2) - 2  # type: ignore
 
 
 def test_duration_div_int():
@@ -72,4 +72,4 @@ def test_duration_div_float():
 
 def test_duration_div_duration():
     with pytest.raises(TypeError):
-        Duration(hours=2) / Duration(hours=2)  # type: ignore
+        _ = Duration(hours=2) / Duration(hours=2)  # type: ignore

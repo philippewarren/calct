@@ -20,17 +20,17 @@ from calct.duration import Duration, timedelta
 
 
 def test_duration_to_timedelta():
-    d = Duration(minutes=2)
-    td = d.as_timedelta
-    assert td == timedelta(minutes=2)
-    assert type(td) == timedelta
+    duration = Duration(minutes=2)
+    time_delta = duration.as_timedelta
+    assert time_delta == timedelta(minutes=2)
+    assert isinstance(time_delta, timedelta)
 
 
 def test_duration_from_timedelta():
-    td = timedelta(hours=3, minutes=32)
-    d = Duration.from_timedelta(td)
-    assert d == Duration(hours=3, minutes=32)
-    assert type(d) == Duration
+    time_delta = timedelta(hours=3, minutes=32)
+    duration = Duration.from_timedelta(time_delta)
+    assert duration == Duration(hours=3, minutes=32)
+    assert isinstance(duration, Duration)
 
 
 def test_duration_get_hours():
@@ -38,7 +38,7 @@ def test_duration_get_hours():
 
 
 def test_duration_set_hours():
-    d = Duration()
-    assert d.hours == 0
-    d.hours = 4
-    assert d == Duration(hours=4)
+    duration = Duration()
+    assert duration.hours == 0
+    duration.hours = 4
+    assert duration == Duration(hours=4)
