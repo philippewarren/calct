@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import pytest
 
-from calct.parser import evaluate_rpn, deque, Duration
+from calct.parser import Duration, deque, evaluate_rpn
 
 
 def test_triple_sum():
@@ -46,28 +46,20 @@ def test_simple_to_operator():
 
 
 def test_product_difference():
-    assert evaluate_rpn(deque(["2h12", "2", "*", "12m", "-"])) == Duration(
-        hours=4, minutes=12
-    )
+    assert evaluate_rpn(deque(["2h12", "2", "*", "12m", "-"])) == Duration(hours=4, minutes=12)
 
 
-def test_divide_addition():
+def test_division_addition():
     assert evaluate_rpn(deque(["2h12", "2", "/", "12m", "-"])) == Duration(minutes=54)
 
 
 def test_double_product():
-    assert evaluate_rpn(deque(["2", "2h12", "*", "3", "*"])) == Duration(
-        hours=12, minutes=72
-    )
-    assert evaluate_rpn(deque(["2h12", "2", "*", "3", "*"])) == Duration(
-        hours=12, minutes=72
-    )
-    assert evaluate_rpn(deque(["2", "3", "*", "2h12", "*"])) == Duration(
-        hours=12, minutes=72
-    )
+    assert evaluate_rpn(deque(["2", "2h12", "*", "3", "*"])) == Duration(hours=12, minutes=72)
+    assert evaluate_rpn(deque(["2h12", "2", "*", "3", "*"])) == Duration(hours=12, minutes=72)
+    assert evaluate_rpn(deque(["2", "3", "*", "2h12", "*"])) == Duration(hours=12, minutes=72)
 
 
-def test_double_divide():
+def test_double_division():
     assert evaluate_rpn(deque(["2h12", "2", "/", "3", "/"])) == Duration(minutes=22)
 
 
@@ -86,18 +78,12 @@ def test_parens():
 
 
 def test_prececence():
-    assert evaluate_rpn(deque(["2h12", "12m", "2", "*", "-"])) == Duration(
-        hours=1, minutes=48
-    )
-    assert evaluate_rpn(deque(["2", "2h12", "3h14", "@", "*"])) == Duration(
-        hours=2, minutes=4
-    )
-    assert evaluate_rpn(deque(["2", "1h02", "*", "3h14", "@"])) == Duration(
-        hours=1, minutes=10
-    )
+    assert evaluate_rpn(deque(["2h12", "12m", "2", "*", "-"])) == Duration(hours=1, minutes=48)
+    assert evaluate_rpn(deque(["2", "2h12", "3h14", "@", "*"])) == Duration(hours=2, minutes=4)
+    assert evaluate_rpn(deque(["2", "1h02", "*", "3h14", "@"])) == Duration(hours=1, minutes=10)
 
 
 @pytest.mark.skip("Scope changed, valid now, test needs to be fixed")
-def test_invalid_time_expression():
+def test_invalid_expression():
     with pytest.raises(ValueError):
         evaluate_rpn(deque(["2", "3", "*"]))

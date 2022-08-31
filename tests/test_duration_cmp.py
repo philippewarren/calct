@@ -50,33 +50,33 @@ def test_duration_ne():
 
 def test_duration_eq_num():
     with pytest.raises(TypeError):
-        Duration(hours=1) == 1  # type:ignore
+        _ = Duration(hours=1) == 1  # type:ignore
 
 
 def test_duration_ne_num():
     with pytest.raises(TypeError):
-        Duration(hours=1) != 1  # type:ignore
+        _ = Duration(hours=1) != 1  # type:ignore
 
 
 def test_duration_lt_num():
     with pytest.raises(TypeError):
-        Duration(hours=1) < 2  # type:ignore
+        _ = Duration(hours=1) < 2  # type:ignore
 
 
 def test_duration_gt_num():
     with pytest.raises(TypeError):
-        Duration(hours=2) > 1  # type:ignore
+        _ = Duration(hours=2) > 1  # type:ignore
 
 
 def test_duration_le_num():
     with pytest.raises(TypeError):
-        Duration(hours=1) <= 2  # type:ignore
+        _ = Duration(hours=1) <= 2  # type:ignore
     with pytest.raises(TypeError):
-        Duration(hours=1) <= 1  # type:ignore
+        _ = Duration(hours=1) <= 1  # type:ignore
 
 
 def test_duration_ge_num():
     with pytest.raises(TypeError):
-        Duration(hours=2) >= 1  # type:ignore
+        _ = Duration(hours=2) >= 1  # type:ignore
     with pytest.raises(TypeError):
-        Duration(hours=2) >= 2  # type:ignore
+        _ = Duration(hours=2) >= 2  # type:ignore

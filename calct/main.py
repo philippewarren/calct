@@ -16,41 +16,49 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+__year__ = "2022"
+__author__ = "Philippe Warren"
+__license__ = "GPLv3"
+
 import argparse
+import cmd
 import logging
 import os
 import sys
-
-import cmd
-
+from dataclasses import dataclass
 from typing import cast
 
-import calct
-from calct.parser import lex, parse, evaluate_rpn
+from calct.__version__ import __version__
 from calct.duration import Duration
+from calct.parser import compute
 
 
 def log_level_from_name(name: str) -> int:
+    """Return the log level from a name"""
     if name == "DEBUG":
         return logging.DEBUG
-    elif name == "INFO":
+
+    if name == "INFO":
         return logging.INFO
-    elif name == "WARNING":
+
+    if name == "WARNING":
         return logging.WARNING
-    elif name == "ERROR":
+
+    if name == "ERROR":
         return logging.ERROR
-    elif name == "CRITICAL":
+
+    if name == "CRITICAL":
         return logging.CRITICAL
-    else:
-        raise ValueError(f"Invalid log level: {name}")
+
+    raise ValueError(f"Invalid log level: {name}")
 
 
 def get_help_str() -> str:
-    return f"""calct v{calct.__version__}:
+    """Return the help string for the program"""
+    return f"""calct v{__version__}:
 Easily do calculations on hours and minutes using the command line
 
-Copyright (C) {calct.__year__} {calct.__author__}
+Copyright (C) {__year__} {__author__}
 Released under the GNU General Public License v3.0
 This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it
@@ -77,45 +85,30 @@ Exemple:
 
 
 def get_licence_str() -> str:
+    """Return the licence string for the program"""
     raise NotImplementedError()
 
 
 def run_once(time_expr_list: list[str]) -> None:
+    """Run the computation on an expression once"""
 
-    arg_string = " ".join(time_expr_list)
-
-    try:
-        tokens = lex(arg_string)
-    except ValueError as e:
-        logging.error(e)
-        return
+    expr = " ".join(time_expr_list)
 
     try:
-        rpn = parse(tokens)
-    except ValueError as e:
-        logging.error(e)
-        return
-    except TypeError as e:
-        print("TypeError IN PARSING")
-        logging.error(e)
-        return
-
-    try:
-        val = evaluate_rpn(rpn)
-    except ValueError as e:
-        print("ValueError IN RPN EVALUATION")
-        logging.error(e)
-        return
-    except TypeError as e:
-        print("TypeError IN RPN EVALUATION")
-        logging.error(e)
-        return
-
-    print(val)
+        print(compute(expr))
+    except ValueError as ex:
+        logging.error(ex)
+    except TypeError as ex:
+        logging.error(ex)
 
 
-class repl(cmd.Cmd):
-    intro = f"calct v{calct.__version__}: Easily do calculations on hours and minutes using the command line\nType `help` or `?` to show help.\n"
+class Repl(cmd.Cmd):
+    """calct REPL"""
+
+    intro = (
+        f"calct v{__version__}: Easily do calculations on hours and minutes using the command line\n"
+        "Type `help` or `?` to show help.\n"
+    )
     prompt = "(calct) > "
 
     def default(self, line: str) -> None:
@@ -130,7 +123,10 @@ class repl(cmd.Cmd):
 
     def do_clear(self, _):
         """Clear the terminal"""
-        os.system("cls") if os.name == "nt" else os.system("clear")
+        if os.name == "nt":
+            os.system("cls")
+        else:
+            os.system("clear")
 
     def do_exit(self, _):
         """Exit the program"""
@@ -154,15 +150,16 @@ class repl(cmd.Cmd):
         else:
             try:
                 Duration.set_string_hour_minute_separator(arg)
-            except TypeError as e:
-                logging.error(e)
-            except ValueError as e:
-                logging.error(e)
+            except TypeError as ex:
+                logging.error(ex)
+            except ValueError as ex:
+                logging.error(ex)
 
 
 def run_loop():
+    """Run the REPL loop"""
     try:
-        repl().cmdloop()
+        Repl().cmdloop()
     except KeyboardInterrupt:
         print("^C")
         sys.exit()
@@ -170,6 +167,8 @@ def run_loop():
 
 @dataclass
 class Args(argparse.Namespace):
+    """Arguments for the program"""
+
     log_level: str = "WARNING"
     interactive: bool = False
     help: bool = False
@@ -178,9 +177,9 @@ class Args(argparse.Namespace):
 
 
 def main():
-
-    FORMAT = "%(levelname)s: %(message)s"
-    logging.basicConfig(format=FORMAT)
+    """Main function"""
+    logging_format = "%(levelname)s: %(message)s"
+    logging.basicConfig(format=logging_format)
 
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument(
@@ -227,8 +226,8 @@ def main():
     if args.separator is not parser.get_default("separator"):
         try:
             Duration.set_string_hour_minute_separator(args.separator)
-        except ValueError as e:
-            logging.error(e)
+        except ValueError as ex:
+            logging.error(ex)
 
     if args.help:
         print(get_help_str())

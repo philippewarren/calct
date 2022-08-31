@@ -8,3 +8,6 @@ __pycache__
 htmlcov*
 *.egg*
 pip-wheel-metadata*
+dist
+calct/__version__.py
+build

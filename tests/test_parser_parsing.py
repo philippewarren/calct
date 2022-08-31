@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import pytest
 
-from calct.parser import parse, deque
+from calct.parser import deque, parse
 
 
 def test_triple_sum():
@@ -36,21 +36,15 @@ def test_triple_sum():
 
 
 def test_double_difference():
-    assert parse(["2h12", "-", "1h56", "-", "12m"]) == deque(
-        ["2h12", "1h56", "-", "12m", "-"]
-    )
+    assert parse(["2h12", "-", "1h56", "-", "12m"]) == deque(["2h12", "1h56", "-", "12m", "-"])
 
 
 def test_product_difference():
-    assert parse(["2h12", "*", "2", "-", "12m"]) == deque(
-        ["2h12", "2", "*", "12m", "-"]
-    )
+    assert parse(["2h12", "*", "2", "-", "12m"]) == deque(["2h12", "2", "*", "12m", "-"])
 
 
 def test_divide_addition():
-    assert parse(["2h12", "/", "2", "-", "12m"]) == deque(
-        ["2h12", "2", "/", "12m", "-"]
-    )
+    assert parse(["2h12", "/", "2", "-", "12m"]) == deque(["2h12", "2", "/", "12m", "-"])
 
 
 def test_double_product():
@@ -76,15 +70,9 @@ def test_parens():
 
 
 def test_prececence():
-    assert parse(["2h12", "-", "12m", "*", "2"]) == deque(
-        ["2h12", "12m", "2", "*", "-"]
-    )
-    assert parse(["2", "*", "2h12", "@", "3h14"]) == deque(
-        ["2", "2h12", "3h14", "@", "*"]
-    )
-    assert parse(["(", "2", "*", "1h02", ")", "@", "3h14"]) == deque(
-        ["2", "1h02", "*", "3h14", "@"]
-    )
+    assert parse(["2h12", "-", "12m", "*", "2"]) == deque(["2h12", "12m", "2", "*", "-"])
+    assert parse(["2", "*", "2h12", "@", "3h14"]) == deque(["2", "2h12", "3h14", "@", "*"])
+    assert parse(["(", "2", "*", "1h02", ")", "@", "3h14"]) == deque(["2", "1h02", "*", "3h14", "@"])
 
 
 def test_unmatched_opening_paren_at_beginning():
