@@ -109,4 +109,4 @@ jobs:
 
       - name: Deploying to PyPI
         run: |
-          python -m twine upload -r testpypi ./dist/* -u '__token__' -p "${{ secrets.TESTPYPI_TOKEN }}"
+          python -m twine upload ./dist/* -u '__token__' -p "${{ secrets.PYPI_TOKEN }}"
