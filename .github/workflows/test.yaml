@@ -34,7 +34,10 @@ jobs:
       - name: Linting
         run: |
           python -m black --check calct tests
+          python -m isort --check-only calct tests
           python -m mypy -p calct -p tests
+          python -m flake8 calct tests
+          python -m pylint calct tests
 
   test:
     needs: lint
@@ -95,7 +98,7 @@ jobs:
 
       - name: Executing tests on build
         run: |
-          python -m pytest -v
+          python -m pytest -v --no-cov
 
       - name: Releasing to GitHub
         uses: softprops/action-gh-release@v1
