@@ -22,7 +22,7 @@ from enum import Enum
 from operator import add, mul, sub, truediv
 from typing import Any, Callable, Union, cast
 
-from calct.common import (
+from calct._common import (
     DIGITS_STR,
     FLOAT_CHARS_STR,
     FLOAT_EXPONENT_STR,

@@ -37,20 +37,41 @@ def test_duration_parse_min():
     assert Duration.parse("56m") == Duration(minutes=56)
 
 
-@pytest.mark.skip("Not implemented")
 def test_duration_parse_min_bigger_than_59():
     assert Duration.parse("86m") == Duration(minutes=86)
 
 
-@pytest.mark.skip("Not implemented")
 def test_duration_parse_h_bigger_than_23():
     assert Duration.parse("32h12") == Duration(hours=32, minutes=12)
 
 
-@pytest.mark.skip("Not implemented")
-def test_duration_parse_float_hours():
+def test_duration_parse_decimal_hours():
     assert Duration.parse("3.5h") == Duration(hours=3.5)
     assert Duration.parse(".5h12") == Duration(hours=0.5, minutes=12)
+
+
+def test_duration_parse_empty():
+    with pytest.raises(ValueError):
+        Duration.parse("")
+
+
+def test_duration_parse_exponential_hours():
+    assert Duration.parse(".5e2h12") == Duration(hours=0.5e2, minutes=12)
+    assert Duration.parse("3E2h12") == Duration(hours=3e2, minutes=12)
+    assert Duration.parse("1000e-1h12") == Duration(hours=1000e-1, minutes=12)
+    assert Duration.parse("123.34e-3h12") == Duration(hours=123.34e-3, minutes=12)
+    assert Duration.parse("123.34e+3h12") == Duration(hours=123.34e3, minutes=12)
+
+
+def test_duration_parse_float_minutes():
+    with pytest.raises(ValueError):
+        Duration.parse("3.5m")
+    with pytest.raises(ValueError):
+        Duration.parse(".5m")
+    with pytest.raises(ValueError):
+        Duration.parse(":.5")
+    with pytest.raises(ValueError):
+        Duration.parse("h4e-2")
 
 
 def test_duration_parse_pure_number():

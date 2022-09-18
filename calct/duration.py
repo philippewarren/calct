@@ -19,14 +19,14 @@ from __future__ import annotations
 from datetime import timedelta
 from functools import total_ordering
 from itertools import chain
-from time import strptime
 
-from calct.common import (
+from calct._common import (
     CANT_BE_CUSTOM_SEPARATOR,
     DEFAULT_HOUR_SEPARATOR,
     DEFAULT_MINUTE_SEPARATOR,
     Number,
 )
+from calct._duration_parser import compile_matcher, parse_duration
 
 
 @total_ordering
@@ -103,9 +103,10 @@ class Duration:
     def parse(cls, time_str: str) -> Duration:
         """Create a Duration from a string."""
         for matcher in cls.get_matchers():
+            pattern = compile_matcher(matcher)
             try:
-                time = strptime(time_str, matcher)
-                return Duration(hours=time.tm_hour, minutes=time.tm_min)
+                time = parse_duration(time_str, pattern)
+                return Duration(hours=time.hours, minutes=time.minutes)
             except ValueError:
                 pass
         raise ValueError(f"Invalid time: {time_str}")
