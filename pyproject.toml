@@ -9,7 +9,7 @@ authors = [
 ]
 description = "Easily do calculations on hours and minutes using the command line"
 readme = "README.md"
-license = {file = "LICENSE"}
+license = {text = "GPLv3"}
 requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3.9",
