@@ -69,7 +69,7 @@ def test_parens():
     )
 
 
-def test_prececence():
+def test_precedence():
     assert parse(["2h12", "-", "12m", "*", "2"]) == deque(["2h12", "12m", "2", "*", "-"])
     assert parse(["2", "*", "2h12", "@", "3h14"]) == deque(["2", "2h12", "3h14", "@", "*"])
     assert parse(["(", "2", "*", "1h02", ")", "@", "3h14"]) == deque(["2", "1h02", "*", "3h14", "@"])
@@ -118,3 +118,7 @@ def test_unmatched_closing_paren_in_middle_before_val():
 def test_unmatched_closing_paren_alone():
     with pytest.raises(ValueError):
         assert parse([")"])
+
+
+def test_substract_becomes_negative_with_minutes():
+    assert parse(["0h", "-", "0h10"]) == deque(["0h", "0h10", "-"])

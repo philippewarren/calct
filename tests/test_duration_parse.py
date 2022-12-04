@@ -35,6 +35,7 @@ def test_duration_parse_colon():
 
 def test_duration_parse_min():
     assert Duration.parse("56m") == Duration(minutes=56)
+    assert Duration.parse("h56") == Duration(minutes=56)
 
 
 def test_duration_parse_min_bigger_than_59():
@@ -48,6 +49,37 @@ def test_duration_parse_h_bigger_than_23():
 def test_duration_parse_decimal_hours():
     assert Duration.parse("3.5h") == Duration(hours=3.5)
     assert Duration.parse(".5h12") == Duration(hours=0.5, minutes=12)
+
+
+@pytest.mark.skip("Not implemented yet")
+def test_duration_parse_negative_h():
+    assert Duration.parse("-3h") == Duration(hours=-3)
+
+
+@pytest.mark.skip("Not implemented yet")
+def test_duration_parse_negative_h_min():
+    assert Duration.parse("-3h12") == Duration(hours=-3, minutes=-12)
+
+
+@pytest.mark.skip("Not implemented yet")
+def test_duration_parse_negative_min():
+    assert Duration.parse("-56m") == Duration(minutes=-56)
+    assert Duration.parse("-h56") == Duration(minutes=-56)
+
+
+@pytest.mark.skip("Not implemented yet")
+def test_duration_parse_negative_h_bigger_than_23():
+    assert Duration.parse("-32h") == Duration(hours=-32)
+
+
+@pytest.mark.skip("Not implemented yet")
+def test_duration_parse_negative_h_min_bigger_than_23():
+    assert Duration.parse("-32h12") == Duration(hours=-32, minutes=-12)
+
+
+@pytest.mark.skip("Not implemented yet")
+def test_duration_parse_negative_h_min_bigger_than_59():
+    assert Duration.parse("-32h62") == Duration(hours=-32, minutes=-62)
 
 
 def test_duration_parse_empty():
@@ -77,3 +109,8 @@ def test_duration_parse_float_minutes():
 def test_duration_parse_pure_number():
     with pytest.raises(ValueError):
         Duration.parse("3")
+
+
+def test_duration_parse_not_number():
+    with pytest.raises(ValueError):
+        Duration.parse("hello")
