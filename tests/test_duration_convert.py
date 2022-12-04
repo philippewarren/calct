@@ -37,8 +37,81 @@ def test_duration_get_hours():
     assert Duration(hours=2, minutes=60).hours == 3
 
 
+def test_duration_get_hours_negative():
+    assert Duration(hours=-1, minutes=-30).hours == -1
+
+
 def test_duration_set_hours():
     duration = Duration()
     assert duration.hours == 0
     duration.hours = 4
     assert duration == Duration(hours=4)
+
+
+def test_duration_set_hours_negative():
+    duration = Duration()
+    assert duration.hours == 0
+    duration.hours = -4
+    assert duration == Duration(hours=-4)
+
+
+def test_duration_get_minutes():
+    assert Duration(hours=1, minutes=30).minutes == 30
+
+
+def test_duration_get_minutes_negative():
+    assert Duration(hours=-1, minutes=-30).minutes == -30
+
+
+def test_duration_set_minutes():
+    duration = Duration()
+    assert duration.minutes == 0
+    duration.minutes = 4
+    assert duration == Duration(minutes=4)
+
+
+def test_duration_set_minutes_negative():
+    duration = Duration()
+    assert duration.minutes == 0
+    duration.minutes = -4
+    assert duration == Duration(minutes=-4)
+
+
+def test_duration_set_minutes_conserve_hours():
+    duration = Duration(hours=3)
+    assert duration.minutes == 0
+    assert duration.hours == 3
+    duration.minutes = 4
+    assert duration == Duration(hours=3, minutes=4)
+
+
+def test_duration_set_minutes_negative_conserve_hours():
+    duration = Duration(hours=3)
+    assert duration.minutes == 0
+    assert duration.hours == 3
+    duration.minutes = -4
+    assert duration == Duration(hours=3, minutes=-4)
+
+
+def test_duration_set_minutes_conserve_hours_negative():
+    duration = Duration(hours=-3)
+    assert duration.minutes == 0
+    assert duration.hours == -3
+    duration.minutes = 4
+    assert duration == Duration(hours=-3, minutes=4)
+
+
+def test_duration_set_minutes_negative_conserve_hours_negative():
+    duration = Duration(hours=-3)
+    assert duration.minutes == 0
+    assert duration.hours == -3
+    duration.minutes = -4
+    assert duration == Duration(hours=-3, minutes=-4)
+
+
+def test_duration_get_total_minutes():
+    assert Duration(hours=1, minutes=30).total_minutes == 90
+
+
+def test_duration_get_total_minutes_negative():
+    assert Duration(hours=-1, minutes=-30).total_minutes == -90

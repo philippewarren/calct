@@ -26,6 +26,7 @@ from calct._common import (
     DEFAULT_MINUTE_SEPARATOR,
     Number,
 )
+from calct._divmod import duration_friendly_divmod
 from calct._duration_parser import compile_matcher, parse_duration
 
 
@@ -60,16 +61,27 @@ class Duration:
         cls.str_hour_sep = DEFAULT_HOUR_SEPARATOR[0]
 
     def __init__(self, hours: Number = 0, minutes: int = 0) -> None:
-        self.minutes: int = int(hours * 60) + minutes
+        self.total_minutes: int = int(hours * 60) + minutes
 
     @property
     def hours(self) -> int:
         """The `hours` part of the duration, truncated"""
-        return divmod(self.minutes, 60)[0]
+        sign, hours, _ = duration_friendly_divmod(self.total_minutes, 60)
+        return sign * hours
 
     @hours.setter
     def hours(self, new_hours: Number) -> None:
-        self.minutes = int(new_hours * 60)
+        self.total_minutes = int(new_hours * 60)
+
+    @property
+    def minutes(self) -> int:
+        """The `minutes` part of the duration, truncated"""
+        sign, _, minutes = duration_friendly_divmod(self.total_minutes, 60)
+        return sign * minutes
+
+    @minutes.setter
+    def minutes(self, new_minutes: int) -> None:
+        self.total_minutes = self.hours * 60 + new_minutes
 
     @staticmethod
     def from_timedelta(time_delta: timedelta) -> Duration:
@@ -111,43 +123,37 @@ class Duration:
                 pass
         raise ValueError(f"Invalid time: {time_str}")
 
-    @property
-    def hours_minutes(self) -> tuple[int, int]:
-        """The `hours` and `minutes` parts of the duration."""
-        return divmod(self.minutes, 60)
-
     def __str__(self) -> str:
-        hours, minutes = self.hours_minutes
-        return f"{hours:.0f}{self.str_hour_sep}{minutes:02.0f}"
+        sign, hours, minutes = duration_friendly_divmod(self.total_minutes, 60)
+        return f"{'-' if sign == -1 else ''}{hours}{self.str_hour_sep}{minutes:02}"
 
     def __repr__(self) -> str:
-        hours, minutes = self.hours_minutes
-        return f"Duration(hours={hours}, minutes={minutes})"
+        return f"Duration(hours={self.hours}, minutes={self.minutes})"
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Duration):  # type: ignore
             raise TypeError(f"unsupported operand type(s) for ==: '{type(self)}' and '{type(other)}'")
-        return self.minutes == other.minutes
+        return self.total_minutes == other.total_minutes
 
     def __lt__(self, other: Duration) -> bool:
         if not isinstance(other, Duration):  # type: ignore
             raise TypeError(f"unsupported operand type(s) for <: '{type(self)}' and '{type(other)}'")
-        return self.minutes < other.minutes
+        return self.total_minutes < other.total_minutes
 
     def __add__(self, other: Duration) -> Duration:
         if not isinstance(other, Duration):  # type: ignore
             raise TypeError(f"unsupported operand type(s) for +: '{type(self)}' and '{type(other)}'")
-        return Duration(minutes=self.minutes + other.minutes)
+        return Duration(minutes=self.total_minutes + other.total_minutes)
 
     def __sub__(self, other: Duration) -> Duration:
         if not isinstance(other, Duration):  # type: ignore
             raise TypeError(f"unsupported operand type(s) for -: '{type(self)}' and '{type(other)}'")
-        return Duration(minutes=self.minutes - other.minutes)
+        return Duration(minutes=self.total_minutes - other.total_minutes)
 
     def __mul__(self, other: Number) -> Duration:
         if not isinstance(other, (int, float)):  # type: ignore
             raise TypeError(f"unsupported operand type(s) for *: '{type(self)}' and '{type(other)}'")
-        return Duration(minutes=int(self.minutes * other))
+        return Duration(minutes=int(self.total_minutes * other))
 
     def __rmul__(self, other: Number) -> Duration:
         return self.__mul__(other)
@@ -155,9 +161,9 @@ class Duration:
     def __truediv__(self, other: Number) -> Duration:
         if not isinstance(other, (int, float)):  # type: ignore
             raise TypeError(f"unsupported operand type(s) for /: '{type(self)}' and '{type(other)}'")
-        return Duration(minutes=int(self.minutes / other))
+        return Duration(minutes=int(self.total_minutes / other))
 
     @property
     def as_timedelta(self) -> timedelta:
         """Return the duration as a timedelta."""
-        return timedelta(minutes=self.minutes)
+        return timedelta(minutes=self.total_minutes)

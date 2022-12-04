@@ -77,7 +77,7 @@ def test_parens():
     ) == Duration(hours=2, minutes=96)
 
 
-def test_prececence():
+def test_precedence():
     assert evaluate_rpn(deque(["2h12", "12m", "2", "*", "-"])) == Duration(hours=1, minutes=48)
     assert evaluate_rpn(deque(["2", "2h12", "3h14", "@", "*"])) == Duration(hours=2, minutes=4)
     assert evaluate_rpn(deque(["2", "1h02", "*", "3h14", "@"])) == Duration(hours=1, minutes=10)
@@ -87,3 +87,11 @@ def test_prececence():
 def test_invalid_expression():
     with pytest.raises(ValueError):
         evaluate_rpn(deque(["2", "3", "*"]))
+
+
+def test_substract_becomes_negative():
+    assert evaluate_rpn(deque(["1h", "2h", "-"])) == Duration(hours=-1)
+
+
+def test_substract_becomes_negative_with_minutes():
+    assert evaluate_rpn(deque(["0h", "0h10", "-"])) == Duration(hours=0, minutes=-10)

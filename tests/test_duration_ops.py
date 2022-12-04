@@ -53,6 +53,11 @@ def test_duration_sub_duration_negative_result():
     assert Duration(hours=2) - Duration(hours=3) == Duration(hours=-1)
 
 
+def test_duration_sub_duration_negative_result_with_minutes():
+    assert Duration(hours=2, minutes=30) - Duration(hours=3, minutes=15) == Duration(hours=-1, minutes=15)
+    assert Duration(hours=0) - Duration(minutes=10) == Duration(minutes=-10)
+
+
 def test_duration_sub_negative_duration():
     assert Duration(hours=2) - Duration(hours=-3) == Duration(hours=5)
 

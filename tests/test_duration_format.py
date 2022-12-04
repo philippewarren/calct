@@ -33,3 +33,24 @@ def test_duration_default_is_null():
 
 def test_duration_repr():
     assert repr(Duration()) == "Duration(hours=0, minutes=0)"
+
+
+def test_duration_str_negative():
+    assert "-1h00" == str(Duration(hours=-1))
+
+
+def test_duration_str_negative_minutes():
+    assert "-0h30" == str(Duration(minutes=-30))
+
+
+def test_duration_str_negative_hours_and_minutes():
+    assert "-1h30" == str(Duration(hours=-1, minutes=-30))
+
+
+def test_duration_str_negative_hours_and_positive_minutes():
+    assert Duration(hours=-1, minutes=30).total_minutes == -60 + 30
+    assert "-0h30" == str(Duration(hours=-1, minutes=30))
+
+
+def test_duration_str_positive_hours_and_negative_minutes():
+    assert "0h30" == str(Duration(hours=1, minutes=-30))

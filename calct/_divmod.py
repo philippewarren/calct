@@ -14,22 +14,33 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from enum import IntEnum
+from typing import Tuple
 
-from calct.__version__ import __version__
-from calct.duration import Duration
-from calct.main import __author__, __license__, __year__, run_loop, run_once
-from calct.parser import compute, evaluate_rpn, lex, parse
+from calct._common import Number
 
-__all__ = [
-    "Duration",
-    "evaluate_rpn",
-    "lex",
-    "parse",
-    "compute",
-    "__version__",
-    "__year__",
-    "__author__",
-    "__license__",
-    "run_loop",
-    "run_once",
-]
+
+class Sign(IntEnum):
+    """Sign of a number."""
+
+    NULL = 0
+    POSITIVE = 1
+    NEGATIVE = -1
+
+    @property
+    def char(self):
+        return "-" if self == Sign.NEGATIVE else ""
+
+
+def sign(number: Number) -> Sign:
+    if number == 0:
+        return Sign.NULL
+    return Sign(int(number) // int(abs(number)))
+
+
+def duration_friendly_divmod(numerator: int, denominator: int) -> Tuple[Sign, int, int]:
+    """Return a tuple (sign, quotient, remainder) such that
+    numerator = (sign * quotient) * denominator + (sign * remainder).
+    """
+
+    return (sign(numerator * denominator), *divmod(abs(numerator), abs(denominator)))
