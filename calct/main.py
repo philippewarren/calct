@@ -89,6 +89,11 @@ def get_licence_str() -> str:
     raise NotImplementedError()
 
 
+def get_version_str() -> str:
+    """Return the version string for the program"""
+    return f"{__version__}"
+
+
 def run_once(time_expr_list: list[str]) -> None:
     """Run the computation on an expression once"""
 
@@ -173,6 +178,7 @@ class Args(argparse.Namespace):
     interactive: bool = False
     help: bool = False
     licence: bool = False
+    version: bool = False
     separator: str = "h"
 
 
@@ -201,6 +207,13 @@ def main():
         "--help",
         action="store_true",
         help="Show this help message and exit",
+        default=False,
+    )
+    parser.add_argument(
+        "-v",
+        "--version",
+        action="store_true",
+        help="Show the version and exit",
         default=False,
     )
     parser.add_argument(
@@ -235,6 +248,9 @@ def main():
         sys.exit()
     elif args.licence:
         print(get_licence_str())
+        sys.exit()
+    elif args.version:
+        print(get_version_str())
         sys.exit()
     elif args.interactive:
         run_loop()

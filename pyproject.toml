@@ -2,6 +2,54 @@
 requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=7.0.5"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "calct"
+authors = [
+    {name = "Philippe Warren", email = "philippewarren31@gmail.com"},
+]
+description = "Easily do calculations on hours and minutes using the command line"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Natural Language :: English",
+    "Natural Language :: French",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = [
+    "ipython>=8.4.0",
+    "black>=22.6.0",
+    "isort>=5.10.1",
+    "mypy>=0.971",
+    "pylint>=2.15.0",
+    "flake8>=5.0.4",
+    "Flake8-pyproject>=1.2.1",
+]
+test = [
+    "pytest>=7.1.2",
+    "pytest-cov>=3.0.0",
+]
+
+[project.urls]
+homepage = "https://github.com/philippewarren/calct"
+repository = "https://github.com/philippewarren/calct"
+changelog = "https://github.com/philippewarren/calct/releases"
+
+[project.scripts]
+calct = "calct.main:main"
+
+[tool.setuptools]
+packages = ["calct"]
+dynamic = {version = {attr = "calct.__version__"}}
+
 [tool.pytest.ini_options]
 required_plugins = "pytest-cov>=3.0.0"
 addopts = "--cov=calct --cov-branch --cov-report=html:htmlcov_calct"
@@ -30,3 +78,6 @@ disable = [
 ]
 enable = ["useless-suppression"]
 max-line-length = 120
+
+[tool.flake8]
+max_line_length = 120
