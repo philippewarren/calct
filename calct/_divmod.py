@@ -1,5 +1,5 @@
 #   calct: Easily do calculations on hours and minutes using the command line
-#   Copyright (C) 2022  Philippe Warren
+#   Copyright (C) 2022-2023  Philippe Warren
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -13,6 +13,7 @@
 #
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 
 from enum import IntEnum
 from typing import Tuple
