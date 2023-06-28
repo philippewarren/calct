@@ -51,7 +51,6 @@ def lex(input_str: str) -> list[str]:
     last_char = None
 
     for char in input_str:
-
         logging.debug(f"{char=}, {buffer=}, {tokens=}")
         if char in OPS_PAREN_STR:
             if last_char and last_char in FLOAT_EXPONENT_STR:

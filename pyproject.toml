@@ -26,17 +26,18 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 dev = [
-    "ipython>=8.4.0",
-    "black>=22.6.0",
-    "isort>=5.10.1",
-    "mypy>=0.971",
-    "pylint>=2.15.0",
-    "flake8>=5.0.4",
-    "Flake8-pyproject>=1.2.1",
+    "ipython==8.14.0",
+    "black==23.3.0",
+    "isort==5.12.0",
+    "mypy==1.4.1",
+    "pylint==2.17.4",
+    "flake8==6.0.0",
+    "Flake8-pyproject==1.2.3",
+    "pyright==1.1.316",
 ]
 test = [
-    "pytest>=7.1.2",
-    "pytest-cov>=3.0.0",
+    "pytest==7.4.0",
+    "pytest-cov==4.1.0",
 ]
 
 [project.urls]
@@ -53,7 +54,7 @@ dynamic = {version = {attr = "calct.__version__"}}
 
 [tool.pytest.ini_options]
 required_plugins = "pytest-cov>=3.0.0"
-addopts = "--cov=calct --cov-branch --cov-report=html:htmlcov_calct"
+addopts = "--cov=calct --cov-branch --cov-report=html:./cov_calct_html --cov-report=xml:./cov_calct.xml"
 
 [tool.setuptools_scm]
 write_to_template = """
@@ -62,8 +63,8 @@ write_to_template = """
 __version__ = "{version}"
 __version_tuple__ = {version_tuple}
 """
-
 write_to = "calct/__version__.py"
+
 [tool.isort]
 profile = "black"
 

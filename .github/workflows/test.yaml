@@ -38,13 +38,14 @@ jobs:
           python -m mypy -p calct -p tests
           python -m flake8 calct tests
           python -m pylint calct tests
+          python -m pyright calct tests
 
   test:
     needs: lint
     strategy:
       matrix:
         os: [ubuntu-22.04, ubuntu-20.04, windows-latest, macos-latest]
-        python-version: ["3.9", "3.10", "3.11", "pypy3.9"]
+        python-version: ["3.9", "3.10", "3.11", "pypy3.9", "pypy3.10"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -61,16 +62,44 @@ jobs:
           python -m pip install .[dev,test]
 
       - name: Executing tests
-        run: python -m pytest -v --cov-report=html:./coverage_html
+        run: python -m pytest --verbose --no-cov
 
-      - name: Uploading coverage
+  coverage:
+    needs: test
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Installing Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Installing tools and dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install .[dev,test]
+
+      - name: Executing tests
+        run: python -m pytest --verbose --cov-report=html:./coverage_html --cov-report=xml:./coverage.xml
+
+      - name: Uploading coverage to GitHub
         uses: actions/upload-artifact@v3
         with:
           name: coverage_${{ matrix.python-version }}_${{ matrix.os }}
           path: ./coverage_html
 
+      - name: Uploading coverage to Codecov
+      - uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: true
+          flags: unittests
+          verbose: true
+
   release:
-    needs: test
+    needs: coverage
     runs-on: ubuntu-22.04
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     steps:
@@ -98,7 +127,7 @@ jobs:
 
       - name: Executing tests on build
         run: |
-          python -m pytest -v --no-cov
+          python -m pytest --verbose --no-cov
 
       - name: Releasing to GitHub
         uses: softprops/action-gh-release@v1
