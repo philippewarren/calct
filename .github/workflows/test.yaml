@@ -87,7 +87,7 @@ jobs:
       - name: Uploading coverage to GitHub
         uses: actions/upload-artifact@v3
         with:
-          name: coverage_${{ matrix.python-version }}_${{ matrix.os }}
+          name: coverage
           path: ./coverage_html
 
       - name: Uploading coverage to Codecov
