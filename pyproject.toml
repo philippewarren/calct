@@ -23,6 +23,9 @@ classifiers = [
     "Typing :: Typed",
 ]
 dynamic = ["version"]
+dependencies = [
+    "typing-extensions>=4.6.3,"
+]
 
 [project.optional-dependencies]
 dev = [
@@ -54,7 +57,7 @@ dynamic = {version = {attr = "calct.__version__"}}
 
 [tool.pytest.ini_options]
 required_plugins = "pytest-cov>=3.0.0"
-addopts = "--cov=calct --cov-branch --cov-report=html:./cov_calct_html --cov-report=xml:./cov_calct.xml"
+addopts = "--cov=calct --cov-branch --cov-context=test --cov-report=html:./cov_calct_html --cov-report=xml:./cov_calct.xml"
 
 [tool.setuptools_scm]
 write_to_template = """
@@ -83,3 +86,21 @@ max-line-length = 120
 
 [tool.flake8]
 max_line_length = 120
+
+[tool.coverage.html]
+show_contexts = true
+
+[tool.coverage.run]
+omit = [
+    "calct/__main__.py",
+    "calct/__version__.py",
+]
+
+[tool.coverage.report]
+exclude_also = [
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+    "raise AssertionError",
+    ".*assert_never\\(.*\\)",
+    "if TYPE_CHECKING:",
+]

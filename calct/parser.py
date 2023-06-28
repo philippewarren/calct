@@ -20,7 +20,9 @@ import logging
 from collections import deque
 from enum import Enum
 from operator import add, mul, sub, truediv
-from typing import Any, Callable, Union, cast
+from typing import Callable, Union, cast
+
+from typing_extensions import Any, assert_never
 
 from calct._common import (
     DIGITS_STR,
@@ -124,7 +126,7 @@ class Operation(Enum):
         if self is Operation.TO:
             return op_to
 
-        return NotImplemented
+        return assert_never(self)
 
     @property
     def precedence(self) -> int:
@@ -144,7 +146,7 @@ class Operation(Enum):
         if self is Operation.TO:
             return 4
 
-        return NotImplemented
+        return assert_never(self)
 
     @property
     def associativity(self) -> Associativity:
@@ -164,7 +166,7 @@ class Operation(Enum):
         if self is Operation.TO:
             return Associativity.RIGHT
 
-        return NotImplemented
+        return assert_never(self)
 
 
 def parse(tokens: list[str]) -> deque[str]:

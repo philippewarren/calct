@@ -17,7 +17,8 @@
 from __future__ import annotations
 
 import re
-from typing import NamedTuple
+
+from typing_extensions import NamedTuple
 
 from calct._common import Number
 

@@ -20,6 +20,8 @@ from datetime import timedelta
 from functools import total_ordering
 from itertools import chain
 
+from typing_extensions import Self
+
 from calct._common import (
     CANT_BE_CUSTOM_SEPARATOR,
     DEFAULT_HOUR_SEPARATOR,
@@ -83,10 +85,10 @@ class Duration:
     def minutes(self, new_minutes: int) -> None:
         self.total_minutes = self.hours * 60 + new_minutes
 
-    @staticmethod
-    def from_timedelta(time_delta: timedelta) -> Duration:
+    @classmethod
+    def from_timedelta(cls, time_delta: timedelta) -> Self:
         """Create a Duration from a timedelta."""
-        return Duration(minutes=int(time_delta.total_seconds() / 60))
+        return cls(minutes=int(time_delta.total_seconds() / 60))
 
     @classmethod
     def get_hour_seps(cls) -> set[str]:
@@ -112,13 +114,13 @@ class Duration:
         return set(matchers_hours) | set(matchers_minutes)
 
     @classmethod
-    def parse(cls, time_str: str) -> Duration:
+    def parse(cls, time_str: str) -> Self:
         """Create a Duration from a string."""
         for matcher in cls.get_matchers():
             pattern = compile_matcher(matcher)
             try:
                 time = parse_duration(time_str, pattern)
-                return Duration(hours=time.hours, minutes=time.minutes)
+                return cls(hours=time.hours, minutes=time.minutes)
             except ValueError:
                 pass
         raise ValueError(f"Invalid time: {time_str}")
@@ -128,40 +130,40 @@ class Duration:
         return f"{'-' if sign == -1 else ''}{hours}{self.str_hour_sep}{minutes:02}"
 
     def __repr__(self) -> str:
-        return f"Duration(hours={self.hours}, minutes={self.minutes})"
+        return f"{self.__class__.__name__}(hours={self.hours}, minutes={self.minutes})"
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Duration):  # type: ignore
+        if not isinstance(other, self.__class__):  # type: ignore
             raise TypeError(f"unsupported operand type(s) for ==: '{type(self)}' and '{type(other)}'")
         return self.total_minutes == other.total_minutes
 
-    def __lt__(self, other: Duration) -> bool:
-        if not isinstance(other, Duration):  # type: ignore
+    def __lt__(self, other: Self) -> bool:
+        if not isinstance(other, self.__class__):  # type: ignore
             raise TypeError(f"unsupported operand type(s) for <: '{type(self)}' and '{type(other)}'")
         return self.total_minutes < other.total_minutes
 
-    def __add__(self, other: Duration) -> Duration:
-        if not isinstance(other, Duration):  # type: ignore
+    def __add__(self, other: Self) -> Self:
+        if not isinstance(other, self.__class__):  # type: ignore
             raise TypeError(f"unsupported operand type(s) for +: '{type(self)}' and '{type(other)}'")
-        return Duration(minutes=self.total_minutes + other.total_minutes)
+        return self.__class__(minutes=self.total_minutes + other.total_minutes)
 
-    def __sub__(self, other: Duration) -> Duration:
-        if not isinstance(other, Duration):  # type: ignore
+    def __sub__(self, other: Self) -> Self:
+        if not isinstance(other, self.__class__):  # type: ignore
             raise TypeError(f"unsupported operand type(s) for -: '{type(self)}' and '{type(other)}'")
-        return Duration(minutes=self.total_minutes - other.total_minutes)
+        return self.__class__(minutes=self.total_minutes - other.total_minutes)
 
-    def __mul__(self, other: Number) -> Duration:
+    def __mul__(self, other: Number) -> Self:
         if not isinstance(other, (int, float)):  # type: ignore
             raise TypeError(f"unsupported operand type(s) for *: '{type(self)}' and '{type(other)}'")
-        return Duration(minutes=int(self.total_minutes * other))
+        return self.__class__(minutes=int(self.total_minutes * other))
 
-    def __rmul__(self, other: Number) -> Duration:
+    def __rmul__(self, other: Number) -> Self:
         return self.__mul__(other)
 
-    def __truediv__(self, other: Number) -> Duration:
+    def __truediv__(self, other: Number) -> Self:
         if not isinstance(other, (int, float)):  # type: ignore
             raise TypeError(f"unsupported operand type(s) for /: '{type(self)}' and '{type(other)}'")
-        return Duration(minutes=int(self.total_minutes / other))
+        return self.__class__(minutes=int(self.total_minutes / other))
 
     @property
     def as_timedelta(self) -> timedelta:
